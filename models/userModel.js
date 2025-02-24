@@ -1,50 +1,59 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       trim: true,
-      required: [true, 'name required'],
-    },
-    slug: {
-      type: String,
-      lowercase: true,
+      required: [true, "Name is required"],
     },
     email: {
       type: String,
-      required: [true, 'emial required'],
+      required: [true, "Email is required"],
       unique: true,
       lowercase: true,
     },
-    phone: String,
-    profileImg: String,
-
     password: {
       type: String,
-      required: [true, 'password required'],
-      minlength: [6, 'Too short password'],
+      required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 characters"],
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
+      enum: ["user", "admin"],
+      default: "user",
     },
-    active: {
-      type: Boolean,
-      default: true,
-    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
   },
   { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  // Hashing user password
-  this.password = await bcrypt.hash(this.password, 12);
+// Hash the password before saving (if modified)
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-const User = mongoose.model('User', userSchema);
+// Ensure the password is not included in the response
+userSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.password;
+    delete ret.resetPasswordToken;
+    delete ret.resetPasswordExpires;
+    return ret;
+  },
+});
+userSchema.set("toObject", {
+  transform: function (doc, ret) {
+    delete ret.password;
+    delete ret.resetPasswordToken;
+    delete ret.resetPasswordExpires;
+    return ret;
+  },
+});
+
+const User = mongoose.model("User", userSchema);
 module.exports = User;

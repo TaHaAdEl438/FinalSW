@@ -1,6 +1,5 @@
-//@desc  Finds the validation errors is this request and wraps then isn an object with handy functions
+const { validationResult } = require("express-validator");
 
-const { validationResult } = require('express-validator');
 const validatorMiddleware = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -1,14 +1,14 @@
-const express = require('express');
-
+const express = require("express");
 const {
   getCategories,
   createCategory,
-} = require('../controller/categoryController');
+} = require("../controller/categoryController");
 
-const authController = require('../controller/authController');
+const { protect } = require("../controller/authController");
 
 const router = express.Router();
 
-router.route('/').get(getCategories).post(authController.protect,createCategory);
+// تأكد أن `protect` ليست undefined
+router.route("/").get(getCategories).post(protect, createCategory);
 
 module.exports = router;

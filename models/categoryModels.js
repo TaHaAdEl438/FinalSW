@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 //1- create Schema
 const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'category required'],
-      unique: [true, 'category must be unique'],
-      minLength: [3, 'Too short category name'],
-      maxLength: [32, 'Too long category name'],
+      required: [true, "Category required"],
+      unique: [true, "Category must be unique"],
+      minLength: [3, "Too short category name"],
+      maxLength: [32, "Too long category name"],
     },
     slug: {
       type: String,
@@ -20,7 +20,6 @@ const categorySchema = new mongoose.Schema(
 );
 
 // 2- create model
-
-const categoryModel = mongoose.model('Category', categorySchema);
+const categoryModel = mongoose.model("Category", categorySchema);
 
 module.exports = categoryModel;
